@@ -17,7 +17,7 @@ Installation
 ::
 
     # build base image
-    docker build -t rs/base-image:xenial https://github.com/srault95/baseimage-docker.git#base-ubuntu-xenial
+    docker build -t rs/base-image:xenial https://github.com/srault95/baseimage-docker.git#base-ubuntu-xenial:image
 
     # build clamav image
     docker build -t rs/clamav:xenial https://github.com/srault95/rs-clamav.git
@@ -53,4 +53,33 @@ Testing
          'virus': 'Eicar-Test-Signature'}
         
         
+Usage in Amavisd-new
+--------------------
+
+::
+
+     ['ClamAV-clamd',
+       \&ask_daemon, ["CONTSCAN {}\n", "/var/run/clamav/clamd.ctl"],
+       qr/\bOK$/m, qr/\bFOUND$/m,
+       qr/^.*?: (?!Infected Archive)(.*) FOUND$/m ],
     
+    );
+
+Usage in Radical-Spam Amavisd-new
+---------------------------------
+
+- Change socket volume to /var/rs/var/run/clamav 
+
+::
+
+    mkdir /home/clamav && cd /home/clamav
+    docker run -d --name clamav -p 127.0.0.1:3310:3310 -v /var/rs/var/run/clamav:/var/run/clamav -v $PWD/db:/var/lib/clamav rs/clamav
+
+     ['ClamAV-clamd',
+       \&ask_daemon, ["CONTSCAN {}\n", "/var/run/clamav/clamd.ctl"],
+       qr/\bOK$/m, qr/\bFOUND$/m,
+       qr/^.*?: (?!Infected Archive)(.*) FOUND$/m ],
+    
+    );
+
+                
