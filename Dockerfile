@@ -1,4 +1,4 @@
-FROM rs/base-image
+FROM rs/base-image:xenial
 
 RUN apt-get update \
 	&& DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
